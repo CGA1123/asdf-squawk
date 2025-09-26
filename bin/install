@@ -13,6 +13,10 @@ function get_arch() {
       uname_arch="arm64"
   fi
 
+  if [[ "$uname_arch" = "x86_64" ]]; then
+      uname_arch="x64"
+  fi
+
   printf $uname_arch
 }
 
