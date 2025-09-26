@@ -1,0 +1,39 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+function get_os() {
+  uname -s | tr '[:upper:]' '[:lower:]'
+}
+
+function get_arch() {
+  local uname_arch=$(uname -m)
+
+  if [[ "$uname_arch" = "aarch64" ]]; then
+      uname_arch="arm64"
+  fi
+
+  printf $uname_arch
+}
+
+install_squawk() {
+  local version=$2
+  local install_path=$3
+  local bin_install_path="$install_path/bin"
+  local os="$(get_os)"
+  local arch="$(get_arch)"
+
+  local download_url="https://github.com/sbdchd/squawk/releases/download/v${version}/squawk-${os}-${arch}"
+
+  mkdir -p "${bin_install_path}"
+
+  echo "Downloading squawk from ${download_url}"
+  if curl -L -sf "$download_url" -o "$install_path/squawk"; then
+    mv "${install_path}/squawk" "${bin_install_path}/squawk"
+    chmod +x "${bin_install_path}/squawk"
+  else
+    exit 1
+  fi
+}
+
+install_squawk "$ASDF_INSTALL_TYPE" "$ASDF_INSTALL_VERSION" "$ASDF_INSTALL_PATH"
