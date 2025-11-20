@@ -32,7 +32,7 @@ install_squawk() {
   mkdir -p "${bin_install_path}"
 
   echo "Downloading squawk from ${download_url}"
-  if curl -L -sf "$download_url" -o "$install_path/squawk"; then
+  if curl --retry 5 -L -sf "$download_url" -o "$install_path/squawk"; then
     mv "${install_path}/squawk" "${bin_install_path}/squawk"
     chmod +x "${bin_install_path}/squawk"
   else
